@@ -1,0 +1,61 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+/////////////// ignore above this line ////////////////////
+
+function main() {
+    var splitted = readLine().split(' ');
+    var n = parseInt(splitted[0]);
+    var k = parseInt(splitted[1]);
+    var array = readLine().split(' ');
+    array = array.map(Number);
+    var pagesCount=0;
+    var total=0;
+    var nextPagesCount = 0;// just for using continue without adding sum;
+	for(var i = 0; i<array.length; i++){
+        if(k==1){// in this case only first chapter items will be "special"
+            total = array[i];
+            break;
+        }
+        
+        var mod = Math.ceil(array[i]/k);// pages per chapter
+        pagesCount = nextPagesCount;
+        nextPagesCount += mod;
+        if(array[i] > pagesCount){// else no "special"
+            var j = Math.ceil((k*pagesCount)/(k-1));// main formula: "special" condition: page + j/k = j;/where j/k additional pages for j amount;      
+            if(j>array[i]){// case when array[i] % k !== 0, and j hit to mod part               
+                continue;
+            }            
+
+            if(j==0){// case reachable on first chapter, and cause first chapter contains page 1 problem 1 we increment total
+                total++;
+                continue;
+            }
+
+            if(j % k == 0 && j<array[i]){//increment total two times only when it is bottom problem in page                
+                total+=2;
+            } else{
+                total++;
+            }           
+        }
+    }
+    
+    console.log(total);
+}
