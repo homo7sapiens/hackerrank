@@ -1,0 +1,56 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+function setCharAt(str,index,chr) {
+    if(index > str.length-1) return str;
+    return str.substr(0,index) + chr + str.substr(index+1);
+}
+/////////////// ignore above this line ////////////////////
+
+function main() {
+    var n = parseInt(readLine());
+    mainloop:for(var i=0; i<n; i++){        
+        var string = readLine();
+        var arr = [];
+        Array.prototype.forEach.call(string, x => arr.push(x));
+        var max = arr[arr.length-1];
+        
+        for(var j=arr.length-2; j>=0; j--){
+            if(arr[j]< max){
+                var pivot = arr[j];// find first increasing pair
+                for(var s=arr.length-1; s>j; s--){
+                    if(arr[s]>pivot){// swap it with lowest value in suffix which greater than pivot
+                        arr[j] = arr[s];
+                        arr[s]=pivot;
+                        var suffix = arr.slice(j+1);
+                        var preffix = arr.slice(0, j+1);
+                        suffix.reverse();// reverse suffix cause it in decreasing order, and we need increasing
+                        console.log(preffix.join('') + suffix.join(''));
+                        continue mainloop;
+                    }
+                }
+            }else{
+                max = arr[j];
+            }
+        }
+        
+        console.log("no answer");
+    }	
+}
