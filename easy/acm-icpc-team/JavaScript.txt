@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+
+    static void Main(String[] args) {
+        string[] tokens_n = Console.ReadLine().Split(' ');
+        int n = Convert.ToInt32(tokens_n[0]);
+        int m = Convert.ToInt32(tokens_n[1]);
+        string[] topic = new string[n];
+        
+        for(int topic_i = 0; topic_i < n; topic_i++){
+           topic[topic_i] = Console.ReadLine();   
+        }
+        
+        var max = 0; var count = 0;
+        for(int i=0; i<n; i++){
+            for(int j=i+1; j<n; j++){
+                var sum = GetSumOfTopics(topic[i], topic[j]);
+                if(max < sum){
+                    count = 1;
+                    max = sum;
+                } else if(max == sum){
+                    count++;                    
+                }
+            }
+        }
+        
+        Console.WriteLine(max);
+        Console.WriteLine(count);
+    }
+    
+    static int GetSumOfTopics(string topic1, string topic2){
+        var count = 0;
+        for(int i=0; i<topic1.Length; i++){
+            if(topic1[i] == '1' || topic2[i] == '1'){
+                count++;
+            }
+        }
+        
+        return count;
+    }
+}

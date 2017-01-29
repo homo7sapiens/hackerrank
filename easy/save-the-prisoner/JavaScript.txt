@@ -1,0 +1,33 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+/////////////// ignore above this line ////////////////////
+
+function main() {
+    var T = parseInt(readLine());
+    for(var i = 0 ; i<T; i++){
+        var temp = readLine().split(' ');
+        var N = parseInt(temp[0]);
+        var M = parseInt(temp[1]);
+        var S = parseInt(temp[2]);
+        var result = (S+M - 1) % (N)
+        console.log(result ? result : N);
+    }	
+}

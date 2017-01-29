@@ -1,0 +1,51 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+/////////////// ignore above this line ////////////////////
+
+function main() {
+    var n_temp = readLine().split(' ');
+    var n = parseInt(n_temp[0]);
+    var m = parseInt(n_temp[1]);
+    array = readLine().split(' ');
+    array = array.map(Number);
+    //console.log(JSON.stringify(array));
+    
+    if(array.length == 1){
+        console.log(n-array[0]-1>array[0] ? n-array[0]-1:array[0]);
+        return;
+    }
+    
+    array.sort((a,b) => a-b);
+    var max = array[1] - array[0] -1;
+    for(var i =2; i<array.length; i++){
+        if(max < array[i] - array[i-1] -1){
+            max = array[i] - array[i-1] -1;
+        }        
+    }
+    
+    var left = array[0];
+    var right = n-array[array.length-1]-1;
+    
+    //console.log(JSON.stringify(array));
+    //console.log(`left:${left} right:${right} middle:${max}`);
+    var result = Math.max(left, Math.ceil(max/2), right);
+    console.log(result);
+}

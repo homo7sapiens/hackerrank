@@ -1,0 +1,48 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+function setCharAt(str,index,chr) {
+    if(index > str.length-1) return str;
+    return str.substr(0,index) + chr + str.substr(index+1);
+}
+/////////////// ignore above this line ////////////////////
+
+function main() {    
+    var array = readLine().split(' ');
+    array = array.map(Number);
+    var count = 0;
+	for(var i = array[0]; i<= array[1]; i++){
+        if(!((i - getReversed(i)) % array[2])){
+            count++;
+        }
+    }
+    
+    console.log(count);
+}
+           
+function getReversed(number){
+       var arr = [];
+    for(var char of number.toString()){
+        arr.push(char);
+    }
+           
+       arr.reverse();
+       return parseInt(arr.join(''));
+}          

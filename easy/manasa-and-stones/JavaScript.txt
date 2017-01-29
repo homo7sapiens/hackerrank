@@ -1,0 +1,50 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+/////////////// ignore above this line ////////////////////
+
+function main() {
+    var T = parseInt(readLine());
+
+    for(var i =0; i<T; i++){
+        var n = parseInt(readLine());
+        var a = parseInt(readLine());
+        var b = parseInt(readLine());
+        var result = {};
+        var aPow = a *(n-1);
+        result[aPow] = 1;
+        var bPow = b;
+        for(var j=1; j<n; j++){
+            aPow -= a; 
+            result[aPow + bPow] = 1;
+            bPow +=b;            
+        }
+        
+        var newRes = []
+        for(var prop in result){
+            newRes.push(prop);
+        }
+        
+        newRes.sort((a,b) => a-b);
+        var res = newRes.join(' ');
+        console.log(res);
+    }
+	
+}

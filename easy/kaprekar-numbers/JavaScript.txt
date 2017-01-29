@@ -1,0 +1,54 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+function setCharAt(str,index,chr) {
+    if(index > str.length-1) return str;
+    return str.substr(0,index) + chr + str.substr(index+1);
+}
+/////////////// ignore above this line ////////////////////
+
+function main() {
+    var p = parseInt(readLine());
+    var q = parseInt(readLine());
+    var result = [];
+    for(var i=p; i<=q; i++){
+        var sqr = i*i;
+        var sqrAsString = sqr.toString();
+        var left = sqrAsString.substr(0,Math.floor(sqrAsString.length/2));
+        var right =sqrAsString.substr(Math.floor(sqrAsString.length/2));
+        if(!left){
+            left = 0;
+        }
+        
+        //console.log(`sqr: ${sqr} left ${left} right ${right}`);
+        if((right*1 + left*1) == i){
+           // console.log(`new i = ${i}`);
+            result.push(i);
+        }
+    }
+    
+    if(result.length == 0){
+        console.log("INVALID RANGE");
+        return;
+    }
+    
+    console.log(result.join(' '));
+	
+}

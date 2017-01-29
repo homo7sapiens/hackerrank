@@ -1,0 +1,46 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+/////////////// ignore above this line ////////////////////
+
+function main() {
+    var s = readLine();
+    var sqrt = Math.sqrt(s.length);
+    var floor = Math.floor(sqrt);
+    var ceil = Math.ceil(sqrt);
+    var rows = floor;
+    var columns = floor;
+    if(rows * columns < s.length){
+        columns = ceil;
+        if(rows * columns < s.length){
+            rows = ceil;
+        }
+    } 
+    
+    var charArray = [];
+    for(var i = 0; i<columns; i++){
+        for(var j = 0; j<rows; j++){
+            charArray.push(s[j * (columns) + i]);
+        }
+        charArray.push(' ');
+    }
+    
+    console.log(charArray.join(''));
+}

@@ -1,0 +1,64 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+/////////////// ignore above this line ////////////////////
+
+function main() {
+    var t = parseInt(readLine());
+    for(var a0 = 0; a0 < t; a0++){
+        var n_temp = readLine().split(' ');
+        var n = parseInt(n_temp[0]);
+        var k = parseInt(n_temp[1]);
+        
+        if(k==0){
+            let res = [];
+            for(let i=1; i<=n; i++){
+                res.push(i);
+            }
+            
+            console.log(res.join(' '));
+            continue;
+        }        
+               
+        if((n % (2*k)) !==0 ){
+            console.log('-1');
+            continue;
+        } else {
+            var div=n%k;
+            let res = [];
+             for( let i=1; i<=n-k; i+=k*2){
+                 //console.log(`i=${i}`);
+                 for(let j=0; j<k; j++){
+                     res[i-1 + j]=i+k+j;
+                     res[i+k-1 +j]=i+j;
+                     //console.log(`i-1+j=${i-1+j} i+k+j=${i+k+j} i+k-1+j=${i+k-1+j} i+j=${i+j}`);
+                 }
+
+                 //res.push(i+k);
+                 
+             }
+            
+            console.log(res.join(' '));
+            continue;  
+        }
+        
+        console.log('-1');
+    }
+}

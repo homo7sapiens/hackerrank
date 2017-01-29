@@ -1,0 +1,80 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+/////////////// ignore above this line ////////////////////
+
+function main() {
+    var t = parseInt(readLine());
+    for(var a0 = 0; a0 < t; a0++){
+        var R_temp = readLine().split(' ');
+        var R = parseInt(R_temp[0]);
+        var C = parseInt(R_temp[1]);
+        var G = [];
+        for(var G_i = 0; G_i < R; G_i++){
+           G[G_i] = readLine();
+        }
+        var r_temp = readLine().split(' ');
+        var r = parseInt(r_temp[0]);
+        var c = parseInt(r_temp[1]);
+        var P = [];
+        for(var P_i = 0; P_i < r; P_i++){
+           P[P_i] = readLine();
+        }
+        
+        var yes = false;
+        mainloop:for(var i=0; i<=R - r; i++){
+            for(var j=0; j<=C -c; j++){
+                if(isPattern(G,P,i,j)){
+                    yes = true;
+                    break mainloop;
+                }
+            }
+           // console.log("=======================");
+        }
+        
+        if(yes){
+            console.log("YES");
+        } else {
+            console.log("NO");
+        }
+    }
+
+}
+
+function isPattern(G,g,i,j){
+   // console.log("in isPattern");
+    //console.log("___________________");
+    if((G.length < g.length + i) || (G[0].length < g[0].length + j)){
+        //console.log(`out of range i=${i} j=${j} G.length = ${G.length} g.length = ${g.length}`);
+        return false;
+    }
+    
+    for(var i1 = 0; i1<g.length; i1++){
+        for(var j1 = 0; j1<g[0].length; j1++){
+           // console.log(`G=${G[i+i1][j+j1]} g=${g[i1][j1]}`);
+           // console.log(`G i=${i} j=${j} i1=${i1} j1=${j1} G=${G[i+i1][j+j1]} g=${g[i1][j1]}`);
+            if(!(G[i+i1][j+j1] == g[i1][j1])){
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}

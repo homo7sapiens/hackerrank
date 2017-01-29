@@ -1,0 +1,55 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+/////////////// ignore above this line ////////////////////
+
+function main() {
+    var n = parseInt(readLine());
+    A = readLine().split(' ');
+    A = A.map(Number);
+    var dict = {};
+    for(var i = 0; i < A.length; i++){
+        if(dict[A[i]]){
+           dict[A[i]].push(i); 
+        } else {
+            dict[A[i]] = [i];
+        }        
+    }
+    
+    var min = n;
+    for(var prop in dict){
+        var curIdx = dict[prop];
+        var curEl = curIdx[0];
+        for(var j=1; j<curIdx.length; j++){
+            var differ = Math.abs(curEl - curIdx[j]);
+            if(differ < min){
+                min = differ;
+            }
+            
+            curEl=curIdx[j];
+        }        
+    }
+
+    if(min === n){
+        min = -1;
+    }
+    
+    console.log(min);
+}
