@@ -1,0 +1,64 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+function setCharAt(str,index,chr) {
+    if(index > str.length-1) return str;
+    return str.substr(0,index) + chr + str.substr(index+1);
+}
+/////////////// ignore above this line ////////////////////
+
+function main() {
+    var n = parseInt(readLine());
+    var array = readLine().split(' ');
+    array = array.map(Number);        
+    console.log(getMaxSquareOfArray(array, 0, array.length - 1));	
+}
+
+function getMaxSquareOfArray(array, startPos, endPos){
+    var minWithIdx = getMinWithIndex(array, startPos, endPos);
+    var currentMinSquare = (endPos - startPos + 1) * minWithIdx.min;
+    var leftMax = 0;
+    if(startPos <= minWithIdx.minIdx - 1){
+        leftMax = getMaxSquareOfArray(array, startPos, minWithIdx.minIdx - 1);
+    }
+    
+    var rightMax = 0;
+    if(minWithIdx.minIdx + 1 <= endPos){
+        rightMax = getMaxSquareOfArray(array, minWithIdx.minIdx+1, endPos);
+    }
+
+//    console.log(`startPos = ${startPos}; endPos = ${endPos}; currentMin = ${currentMinSquare}; leftMax = ${leftMax}; rightMax = ${rightMax}; minIdx = ${minWithIdx.minIdx}`);
+    return Math.max(currentMinSquare, leftMax, rightMax);
+}
+
+function getMinWithIndex(array, startPos, endPos){
+    var result = {};
+    var min = array[endPos], minIdx = endPos;    
+    for(var i = startPos; i < endPos; i++){
+        if(array[i] < min){
+            min = array[i];
+            minIdx = i;
+        }
+    }
+    
+    result.min = min;
+    result.minIdx = minIdx;
+    return result;
+}
