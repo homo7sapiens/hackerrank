@@ -1,0 +1,44 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+/////////////// ignore above this line ////////////////////
+
+function getRecord(s){
+    var best=s[0], worst=s[0], bcount=0, wcount=0;
+    for(var i=1; i<s.length; i++){
+        if(s[i] > best){
+            best = s[i];
+            bcount++;
+        } else if(s[i] < worst){
+            worst = s[i];
+            wcount++;
+        }      
+    }
+    return [bcount, wcount];
+}
+
+function main() {
+    var n = parseInt(readLine());
+    s = readLine().split(' ');
+    s = s.map(Number);
+    var result = getRecord(s);
+    console.log(result.join(" "));
+
+}
