@@ -1,0 +1,63 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+/////////////// ignore above this line ////////////////////
+
+function findCurrentPosition(scores, paramsObj, aliceScore){
+    while(paramsObj.backwardIdx >= 0){
+        if(aliceScore > scores[paramsObj.backwardIdx]){
+            if(scores[paramsObj.backwardIdx] !== scores[--paramsObj.backwardIdx]){
+                paramsObj.lastRank--;
+            }
+        }else if(aliceScore == scores[paramsObj.backwardIdx]){
+            return paramsObj.lastRank;
+        }else if(aliceScore < scores[paramsObj.backwardIdx]){
+            return paramsObj.lastRank+1;
+        }
+    }
+    
+    if(paramsObj.backwardIdx < 0){
+        return 1;
+    }
+}
+
+function main() {
+    var n = parseInt(readLine());
+    scores = readLine().split(' ');
+    scores = scores.map(Number);
+    var m = parseInt(readLine());
+    alice = readLine().split(' ');
+    alice = alice.map(Number);
+    var lastRank = 1;
+    for(var i = 1; i < scores.length; i++){
+        if(scores[i-1] != scores[i]){
+            lastRank++;
+        }
+    }
+    
+    var backwardIdx = scores.length - 1;
+    var paramsObj = {};
+    paramsObj.backwardIdx = backwardIdx;
+    paramsObj.lastRank = lastRank;
+    for(var aliceScore of alice){
+        console.log(findCurrentPosition(scores, paramsObj, aliceScore));
+    }  
+
+}
