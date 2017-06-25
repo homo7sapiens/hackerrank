@@ -1,0 +1,88 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+function setCharAt(str,index,chr) {
+    if(index > str.length-1) return str;
+    return str.substr(0,index) + chr + str.substr(index+1);
+}
+/////////////// ignore above this line ////////////////////
+
+function isSorted(array){
+    for(let i=0; i<array.length-1; i++){
+        if(array[i] > array[i+1]){
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+function main() {
+    var n = parseInt(readLine());
+    var array = readLine().split(' ');
+    array = array.map(Number);
+    let leftConflict = -1;
+	for(let i=0; i< array.length-1; i++){
+       if(array[i] > array[i+1]){
+           leftConflict = i;
+           break;
+       } 
+    }
+    
+    if(leftConflict == -1){
+        console.log("yes");
+        return;
+    }
+    
+    let rightConflict = leftConflict;
+    for(let i=array.length-1; i>0; i--){
+        if(array[i] < array[i-1]){
+            rightConflict = i;
+            break;
+        }
+    }
+    
+    var leftIdx = leftConflict, rightIdx = rightConflict;
+    var m = array[leftIdx];
+    array[leftIdx] = array[rightIdx];
+    array[rightIdx] = m;
+    
+    var left = leftIdx < rightIdx ? leftIdx : rightIdx;
+    var right = rightIdx > leftIdx ? rightIdx : leftIdx;
+    if(isSorted(array)){
+        console.log("yes");
+        console.log(`swap ${left+1} ${right+1}`);
+        return;
+    }
+    
+    array[rightIdx] = array[leftIdx];
+    array[leftIdx] = m;    
+    
+    var removed = array.splice(left, right - left +1);
+    removed.reverse();
+    array.splice(left,0,...removed);
+    if(isSorted(array)){
+        console.log("yes");
+        console.log(`reverse ${left+1} ${right+1}`);
+        return;
+    } 
+    
+    console.log("no");    
+}
