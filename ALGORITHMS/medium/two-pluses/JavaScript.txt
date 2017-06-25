@@ -1,0 +1,159 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+function setCharAt(str,index,chr) {
+    if(index > str.length-1) return str;
+    return str.substr(0,index) + chr + str.substr(index+1);
+}
+/////////////// ignore above this line ////////////////////
+
+function isHaveSizeOne(map){
+    var count = 0;
+    for(var item of map){
+        for(var cell of item){
+            if(cell){
+                count++;
+            }
+            
+            if(count == 2){
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
+function pushPointToResult(sizesArray, i,j,k){    
+    var point = {};
+    point.i = i;
+    point.j = j;
+    point.k = k;
+    sizesArray.push(point);
+}
+
+function pushPlussesForPoint(i,j,map,height, width, sizesArray){
+    if(!map[i][j]){
+        return;
+    }
+    
+    for(let k=1; k<height; k++){
+        let left = j-k;
+        if(left < 0 || !map[i][left]){
+            return;
+        }
+        
+        let right = j+k;
+        if(right >= width || !map[i][right]){
+            return;
+        }
+        
+        let top = i-k;
+        if(top < 0 || !map[top][j]){
+            return;
+        }
+        
+        let bottom = i+k;
+        if(bottom >= height || !map[bottom][j]){
+            return;
+        }        
+
+        pushPointToResult(sizesArray, i,j,k);
+    }
+}
+
+function findAllPluses(map,height, width){
+    var sizesArray = [];
+    for(let i=1; i<height -1; i++){
+        for(let j=1; j<width-1; j++){
+            pushPlussesForPoint(i,j,map,height, width,sizesArray);
+        }
+    }
+    
+    return sizesArray;
+}
+
+function getKey(i,j){
+    return `${i}_${j}`;
+}
+
+function hasIntersection(plus1, plus2){
+    var dictionary = {};
+    if(plus1.dictionary){
+        dictionary = plus1.dictionary;
+    } else{
+        dictionary[getKey(plus1.i,plus1.j)] = 1;
+        for(let i = 1; i <= plus1.k; i++){
+            dictionary[getKey(plus1.i + i, plus1.j)] = 1;
+            dictionary[getKey(plus1.i - i,plus1.j)] = 1;
+            dictionary[getKey(plus1.i,plus1.j + i)] = 1;
+            dictionary[getKey(plus1.i,plus1.j - i)] = 1;
+        }
+    }
+
+    plus1.dictionary = dictionary;
+    for(let i = 1; i <= plus2.k; i++){
+        if(dictionary[getKey(plus2.i + i, plus2.j)]
+            || dictionary[getKey(plus2.i - i,plus2.j)]
+            || dictionary[getKey(plus2.i,plus2.j + i)]
+            || dictionary[getKey(plus2.i,plus2.j - i)]){
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+
+function getMaxProduct(allPlusses){    
+    allPlusses = allPlusses.sort((a,b) => b.k - a.k);
+    var max = allPlusses.length ? allPlusses[0].k * 4 + 1 : 1;
+    for(let i = 0; i<allPlusses.length; i++){
+        for(let j = i+1; j<allPlusses.length; j++){
+            if(!hasIntersection(allPlusses[i], allPlusses[j])){
+                var total1 = allPlusses[i].k * 4 + 1;
+                var total2 = allPlusses[j].k * 4 + 1;
+                if(total1 * total2 > max){
+                    max = total1* total2;
+                }
+            }
+        }
+    }
+    
+    return max;
+}
+
+function main() {
+    var params = readLine().split(' ');
+    params = params.map(Number);
+    var map = [];
+    for(var i=0; i<params[0]; i++){
+        map.push(readLine().split('').map(x => x=='G' ? 1 : 0));
+    }
+    
+    if(!isHaveSizeOne(map)){
+        console.log(0);
+        return;
+    }
+    
+    allPlusses = findAllPluses(map, params[0], params[1]); 
+    console.log(getMaxProduct(allPlusses));
+	
+}
