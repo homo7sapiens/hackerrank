@@ -1,0 +1,60 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+function setCharAt(str,index,chr) {
+    if(index > str.length-1) return str;
+    return str.substr(0,index) + chr + str.substr(index+1);
+}
+/////////////// ignore above this line ////////////////////
+function setElementToHisPosition(array, i){
+    let idx = array.indexOf(i+1);
+    while(idx != i){
+        let temp = array[idx - 1];
+        array[idx-1] = array[idx];
+        array[idx] = array[idx + 1];
+        array[idx + 1] = temp;
+        idx--;
+    }
+}
+
+function canSort(array){
+    var inversions = 0;
+    for(let i = 0; i < array.length; i++){
+        let current = array[i];
+        for(let j = i + 1; j < array.length; j++){
+            if(array[j] < array[i]){
+                inversions++
+            }
+        }
+    }
+    
+    return !(inversions % 2);
+}
+
+
+function main() {
+    var n = parseInt(readLine());
+    for(let i = 0; i < n; i++){
+        var N = parseInt(readLine());
+        var array = readLine().split(' ');        
+        array = array.map(Number);
+        canSort(array) ? console.log('YES') : console.log('NO');
+    }	
+}
