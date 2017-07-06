@@ -1,0 +1,117 @@
+process.stdin.resume();
+process.stdin.setEncoding('ascii');
+
+var input_stdin = "";
+var input_stdin_array = "";
+var input_currentline = 0;
+
+process.stdin.on('data', function (data) {
+    input_stdin += data;
+});
+
+process.stdin.on('end', function () {
+    input_stdin_array = input_stdin.split("\n");
+    main();    
+});
+
+function readLine() {
+    return input_stdin_array[input_currentline++];
+}
+
+function setCharAt(str,index,chr) {
+    if(index > str.length-1) return str;
+    return str.substr(0,index) + chr + str.substr(index+1);
+}
+/////////////// ignore above this line ////////////////////
+function getValue(rows, columns, matrix, r, c, cycle, cycles, position){
+    let rightColumn = columns - cycle - 1;
+    let leftColumn = cycle;    
+    let bottomLine = rows - cycle - 1;
+    let topLine = cycle;
+    let cyclesAfterMod = cycles % (2*(columns + rows - 4 * cycle) - 4);
+    let count = 0;
+    while(count < 5){
+        if(position == "top"){            
+            if(rightColumn - c >= cyclesAfterMod){
+                return matrix[r][ c + cyclesAfterMod];
+            }
+            
+            cyclesAfterMod -= rightColumn - c;
+            c = rightColumn;
+            position = "right";
+        } else if(position == "right"){
+            if(bottomLine - r >= cyclesAfterMod){
+                return matrix[r + cyclesAfterMod][ c];
+            }
+            
+            cyclesAfterMod -= bottomLine - r;
+            r = bottomLine;
+            position = "bottom";
+        } else if(position == "bottom"){
+            if(c >= cyclesAfterMod + leftColumn){
+                return matrix[r][ c - cyclesAfterMod];
+            }
+            
+            cyclesAfterMod -= c - leftColumn;
+            c = leftColumn;
+            position = "left";
+        } else if(position == "left"){
+            if(r >= cyclesAfterMod + topLine){
+                return matrix[r - cyclesAfterMod][ c];
+            }
+            
+            cyclesAfterMod -= r - topLine;
+            r = topLine;
+            position = "top";
+        }
+        
+        count++;
+    } 
+}
+
+function displayMatrix(matrix){
+    for(let row of matrix){
+        console.log(row.join(' '));
+    }
+}
+
+function main() {
+    var params = readLine().split(' ');
+    params = params.map(Number);
+    var matrix = [];
+    var result = [];
+    var rows = params[0], columns = params[1], cycles = params[2];
+    for(let i = 0; i<rows; i++){
+        matrix.push(readLine().split(' '));
+        result.push(Array.from(Array(columns), () => 0));
+    }
+    
+	let min = Math.min(rows, columns);
+    let totalCycles = min/2;
+    for(let i = 0; i < totalCycles; i++){
+        for(let j = i; j < columns - i; j++){
+            let vale = getValue(rows,columns,matrix,i, j, i, cycles, "top");
+            result[i][j] = vale;
+        }
+        
+        let rightColumn = columns-i-1;
+        for(let j = i + 1; j < rows - i; j++){
+            let vale = getValue(rows,columns,matrix,j, rightColumn, i, cycles, "right");
+            result[j][rightColumn] = vale;
+        }
+        
+        let bottomLine = rows-i-1;
+        for(let j = columns - i - 2; j >= i; j--){
+            let vale = getValue(rows,columns,matrix,bottomLine, j, i, cycles, "bottom");
+            result[bottomLine][j] = vale;
+        }
+        
+        let leftColumn = i;
+        for(let j = rows - 2 - i; j > i; j--){
+            let vale = getValue(rows,columns,matrix,j, leftColumn, i, cycles, "left");
+            result[j][leftColumn] = vale;
+        }
+    }
+    
+    displayMatrix(result);
+}
