@@ -1,0 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+
+    static string super_reduced_string(string s){
+        // Complete this function
+    }
+
+    static void Main(String[] args) {
+        string s = Console.ReadLine();
+        string result = super_reduced_string(s);
+        Console.WriteLine(result);
+    }
+}

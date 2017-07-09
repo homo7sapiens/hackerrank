@@ -1,0 +1,27 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+class Solution {
+    static string super_reduced_string(string s){
+        var stack = new Stack<char>();
+        foreach (var letter in s)
+        {
+            if (stack.Count() == 0 || stack.Peek() != letter)
+            {
+                stack.Push(letter);
+                continue;
+            }
+
+            stack.Pop();
+        }
+
+        return String.Join("", stack.Reverse());
+    }
+
+    static void Main(String[] args) {
+        string s = Console.ReadLine();
+        string result = super_reduced_string(s);
+        Console.WriteLine(string.IsNullOrEmpty(result) ? "Empty String" : result);
+    }
+}
