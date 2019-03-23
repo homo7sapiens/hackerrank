@@ -1,0 +1,39 @@
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+from functools import cmp_to_key
+
+def compare(str1, str2):
+    if len(str1) == len(str2):
+        if str1 == str2:
+            return 0
+        elif str1 < str2:
+            return -1
+        else: return 1 
+    return len(str1) - len(str2)
+
+# Complete the bigSorting function below.
+def bigSorting(unsorted):
+    return sorted(unsorted, key=cmp_to_key(compare))
+
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+    n = int(input())
+
+    unsorted = []
+
+    for _ in range(n):
+        unsorted_item = input()
+        unsorted.append(unsorted_item)
+
+    result = bigSorting(unsorted)
+
+    fptr.write('\n'.join(result))
+    fptr.write('\n')
+
+    fptr.close()
